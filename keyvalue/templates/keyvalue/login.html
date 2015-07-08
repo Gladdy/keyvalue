@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col-xs-offset-2 col-xs-8">
+
+            <form method="POST" action="{% url 'login' %}" class="form-horizontal">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <div class="col-xs-offset-3 col-xs-6">
+                        <h1>Please sign in</h1>
+                    </div>
+                </div>
+
+                {% if error %}
+                    <div class="form-group">
+                        <div class="alert alert-danger col-xs-offset-3 col-xs-6">
+                            <p>{{ error }}</p></div>
+                    </div>
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="id_email" class="control-label col-xs-3">Username or email</label>
+                    <div class="col-xs-6">
+                        <input type="text" class="form-control" id="id_email" name="id" required autofocus>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_password" class="control-label col-xs-3">Password</label>
+                    <div class="col-xs-6">
+                        <input type="password" class="form-control" id="id_password" name="password" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-offset-3 col-xs-6">
+                        <button type="submit" class="btn btn-lg btn-primary btn-block">Sign in</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

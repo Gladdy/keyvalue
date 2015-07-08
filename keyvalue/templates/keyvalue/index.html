@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row">
+    <div class="col-md-12">
+        <h1>GET STARTED NOW</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <h2>REST Key-Value storage</h2>
+
+            <p>
+                No authorization required for basic functionality
+            </p>
+
+            <p>
+                No authorization required
+            </p>
+
+            <ul>
+                <li>Home</li>
+                <li>About</li>
+                <li>Contact</li>
+            </ul>
+        </div>
+
+
+        <div class="col-md-4">
+            <h2>Hello 1</h2>
+            <div class="highlight"><pre><code class="language-xml" data-lang="xml">GET /api/value_key?api_key=secret
+
+HTTP 200 OK
+Content-Type: text/json
+{
+    "data" : "Hello world!",
+    "expiry" : "2019-12-31"
+}</code></pre></div>
+        </div>
+
+        <div class="col-md-4">
+            <h2>Features</h2>
+            <ul>
+                <li>Supports GET, POST, PUT and DELETE</li>
+                <li>API tokens are optional</li>
+                <li></li>
+            </ul>
+
+            <h2>Functionality</h2>
+            <ul>
+                <li>Easy access to your values</li>
+                <li>Delete and expire values</li>
+                <li>Very simple API, usable with only GET and POST of JSON</li>
+            </ul>
+
+
+            <h2>Register</h2>
+            <ul>
+                <li>Easy access to your values</li>
+                <li>Delete and expire values</li>
+                <li>Very simple API, usable with only GET and POST of JSON</li>
+            </ul>
+
+            <a class="btn btn-default" href="/register" role="button">Register</a>
+        </div>
+    </div>
+{% endblock %}
