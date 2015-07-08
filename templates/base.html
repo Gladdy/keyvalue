@@ -48,8 +48,8 @@
 
                     {% if user.is_authenticated %}
                         <li><p class="navbar-text">Welcome <b>{{ user.username }}</b></p></li>
-                        <li><a href="{% url 'index-features' %}">Management</a></li>
-                        <li><a href="{% url 'index-about' %}">Settings</a></li>
+                        <li><a href="{% url 'control:manage' %}">Management</a></li>
+                        <li><a href="{% url 'control:settings' %}">Settings</a></li>
                         <li>
                             <form method="post" action="{% url 'logout' %}" class="navbar-form" style="max-width:100%;">
                                 {% csrf_token %}

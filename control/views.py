@@ -1,3 +1,9 @@
 from django.shortcuts import render
+from api.models import Entry
 
-# Create your views here.
+def manage(request):
+    entries = Entry.objects.filter()
+    return render(request, 'control/manage.html')
+
+def settings(request):
+    return render(request, 'control/settings.html')

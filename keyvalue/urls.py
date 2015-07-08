@@ -20,6 +20,8 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name="index-index"),
+    url(r'^control/', include('control.urls', namespace="control")),
+
 
     url(r'^login/$', views.login, name='login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}, name='logout'),
@@ -29,6 +31,7 @@ urlpatterns = [
     url(r'^about/', views.about, name="index-about"),
 
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/', include('api.urls', namespace="api")),
 ]
 

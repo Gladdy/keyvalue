@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login as django_login
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.db import IntegrityError
@@ -11,6 +11,7 @@ def index(request):
     else:
         return render(request, 'keyvalue/index.html')
 
+
 def features(request):
     return render(request, 'keyvalue/features.html')
 
@@ -18,11 +19,12 @@ def features(request):
 def about(request):
     return render(request, 'keyvalue/about.html')
 
+
 def login(request):
 
     if request.user.is_authenticated():
         ''' No need to show login page whenever the user is already logged in '''
-        return HttpResponseRedirect('/')
+        return redirect('index-index')
 
     elif request.method == 'GET':
         ''' Show the login page '''
@@ -80,4 +82,4 @@ def register(request):
         except IntegrityError:
             return render(request, "keyvalue/register.html", {'error': "This username was already taken or invalid"})
         except Exception:
-            return render(request, "keyvalue/register.html", {'error': "An error occurred, maybe you entered invalid data?"})
+            return render(request, "keyvalue/register.html", {'error': "An error occurred: invalid data?"})
