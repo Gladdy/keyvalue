@@ -4,6 +4,9 @@ from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.db import IntegrityError
+from api.models import ApiKey
+
+from keyvalue.utility import create_api_key
 
 def index(request):
     if request.user.is_authenticated():
@@ -28,7 +31,7 @@ def login(request):
 
     elif request.method == 'GET':
         ''' Show the login page '''
-        return render(request, "keyvalue/login.html")
+        return render(request, "keyvalue/login.html", {'nextpage': request.GET.get('next', '/')})
 
     else:
         ''' Validate the credentials '''
@@ -52,7 +55,9 @@ def login(request):
         if user is not None:
             # If the password matches, log the user in
             django_login(request, user)
-            return HttpResponseRedirect('/')
+
+            # Extract the page that has been supplied for redirection
+            return HttpResponseRedirect(request.POST.get('nextpage',''))
         else:
             return render(request, "keyvalue/login.html", {'error': "Invalid password"})
 
@@ -64,10 +69,8 @@ def register(request):
         return render(request, "keyvalue/register.html")
 
     else:
-        if 'username' in request.POST and \
-                'email' in request.POST and \
-                'password1' in request.POST and \
-                'password2' in request.POST:
+        if 'username' in request.POST and 'email' in request.POST and \
+                'password1' in request.POST and 'password2' in request.POST:
             username = request.POST['username']
             email = request.POST['email']
             password1 = request.POST['password1']
@@ -79,12 +82,21 @@ def register(request):
             return render(request, "keyvalue/register.html", {'error': "The passwords do not match"})
 
         try:
-            User.objects.create_user(username=username, email=email,password=password1)
+            # Create the new account
+            user = User.objects.create_user(username=username, email=email, password=password1)
+            setup_new_user(user)
+
+            # Log the new account in
             user = authenticate(username=username,password=password1)
-            django_login(request,user)
+            django_login(request, user)
+
             return render(request, "keyvalue/register.html", {'success': "Registration successful!"})
 
         except IntegrityError:
             return render(request, "keyvalue/register.html", {'error': "This username was already taken or invalid"})
         except Exception:
             return render(request, "keyvalue/register.html", {'error': "An error occurred: invalid data?"})
+
+def setup_new_user(user):
+    create_api_key(user, None, is_key_root=True)
+    create_api_key(user, None, is_key_generate=True)

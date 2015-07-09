@@ -1,21 +1,60 @@
 {% extends 'control/control.html' %}
 
 {% block control %}
-    <h2>Overview</h2>
-    <p> Here you can see all the keys associated with your account </p>
+
+    <div class="row row-main">
+    <h2>Master keys</h2>
+    <p>
+        Take care and keep the root key secret.
+    </p>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Type</th>
+            <th>Key</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td> Root key </td>
+            <td  class="key"> {{ key_root.key }} </td>
+            <td> Do almost everything, including deletions </td>
+        </tr>
+        <tr>
+            <td> Generation key </td>
+            <td  class="key"> {{ key_generate.key }} </td>
+            <td> Allows you to generate additional keys </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="row row-main">
+    <h2>Generated keys</h2>
+    <p>
+        List and delete keys.
+        Currently, there is no limit on the amount of keys that can be associated with your account.
+    </p>
+    <form method="post" action="{% url 'control:generate_apikey' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Generate additional key</button>
+    </form>
+
     <table class="table">
         <thead>
         <tr>
             <th>Key</th>
             <th>Created on</th>
+            <th>Created by</th>
             <th>Revoke</th>
         </tr>
         </thead>
         <tbody>
         {% for key in keys %}
             <tr>
-                <td> {{ key.key }} </td>
-                <td> {{ key.created }} </td>
+                <td class="key"> {{ key.key }} </td>
+                <td> {{ key.created_time }} </td>
+                <td> {{ key.created_ip }} </td>
                 <td>
                     <form method="post" action="{% url 'control:delete_apikey' %}">
                         {% csrf_token %}
@@ -27,11 +66,5 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <h2>Additional keys</h2>
-    <p> There is no limit on the amount of keys you can use </p>
-    <form method="post" action="{% url 'control:generate_apikey' %}">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-primary">Generate</button>
-    </form>
+</div>
 {% endblock %}

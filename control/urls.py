@@ -11,12 +11,10 @@ urlpatterns = [
     url(r'^bulk/$', views.bulk, name='bulk'),
     url(r'^apikeys/$', views.apikeys, name='apikeys'),
 
-    # Utility
-    url(r'^generate_apikey/$', views.generate_apikey, name='generate_apikey'),
-    url(r'^delete_apikey/$', views.delete_apikey, name='delete_apikey'),
-
     # Settings
     url(r'^restrictions/$', views.restrictions, name='restrictions'),
 
-
+    # Form submits
+    url(r'^generate_apikey/$', views.generate_apikey, name='generate_apikey'),
+    url(r'^delete_apikey/$', views.delete_apikey, name='delete_apikey'),
 ]

@@ -21,3 +21,16 @@ body {
 .nocursor {
     cursor:default;
 }
+
+h2 {
+    margin-top:10px;
+}
+
+.row-main {
+    margin-bottom:20px;
+}
+
+.key {
+    font-family: Courier;
+    font-size:12pt;
+}

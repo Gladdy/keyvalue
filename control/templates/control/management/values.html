@@ -1,22 +1,26 @@
 {% extends 'control/control.html' %}
-
 {% block control %}
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Key</th>
-            <th>Owner</th>
-            <th>Value</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for entry in entries %}
+    <div class="row row-main">
+        <h2>My values</h2>
+
+        <table class="table">
+            <thead>
             <tr>
-                <td> {{ entry.key }} </td>
-                <td> {{ entry.user }} </td>
-                <td> {{ entry.value|truncatechars:100 }} </td>
+                <th>Key</th>
+                <th>Owner</th>
+                <th>Value</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for entry in entries %}
+                <tr>
+                    <td> {{ entry.key }} </td>
+                    <td> {{ entry.user }} </td>
+                    <td> {{ entry.value|truncatechars:100 }} </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 {% endblock %}
