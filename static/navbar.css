@@ -1,8 +1,23 @@
 body {
-  padding-top: 20px;
-  padding-bottom: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 .navbar {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
+    width:100%;
+        background-color:#fbfbfb;
+}
+
+.headerbutton {
+    background-color:#e7e7e7;
+    width:100%;
+}
+
+.activebutton {
+    font-weight:bold;
+    color: black;
+}
+.nocursor {
+    cursor:default;
 }

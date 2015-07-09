@@ -48,12 +48,11 @@
 
                     {% if user.is_authenticated %}
                         <li><p class="navbar-text">Welcome <b>{{ user.username }}</b></p></li>
-                        <li><a href="{% url 'control:manage' %}">Management</a></li>
-                        <li><a href="{% url 'control:settings' %}">Settings</a></li>
+                        <li><a href="{% url 'control:index' %}">Control center </a></li>
                         <li>
                             <form method="post" action="{% url 'logout' %}" class="navbar-form" style="max-width:100%;">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-success">Sign out</button>
+                                <button type="submit" class="btn btn-primary">Sign out</button>
                             </form>
                         </li>
 
@@ -65,7 +64,7 @@
                             <input type="text" class="form-control" placeholder="Username or email" name="id" required/>
                             <input type="password" class="form-control" placeholder="Password" name="password" required/>
 
-                            <button type="submit" class="btn btn-success">Sign in</button>
+                            <button type="submit" class="btn btn-primary">Sign in</button>
                         </form>
 
                     {% endif %}

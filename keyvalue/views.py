@@ -38,14 +38,19 @@ def login(request):
         else:
             return render(request, "keyvalue/login.html", {'error': "Please fill in all fields"})
 
-        try:
-            candidate = User.objects.get(Q(username=identifier)|Q(email=identifier))
-        except User.DoesNotExist:
+        # Search for the username and email address to determine the user to log in
+        candidates = User.objects.filter(Q(username=identifier)|Q(email=identifier))
+
+        if candidates.count() == 0:
             return render(request, "keyvalue/login.html", {'error': "Unable to find username or email address"})
 
+        candidate = candidates[0]
+
+        # Try to authenticate the user
         user = authenticate(username=candidate.username, password=password)
 
         if user is not None:
+            # If the password matches, log the user in
             django_login(request, user)
             return HttpResponseRedirect('/')
         else:

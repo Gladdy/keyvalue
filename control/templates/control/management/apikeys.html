@@ -1,0 +1,37 @@
+{% extends 'control/control.html' %}
+
+{% block control %}
+    <h2>Overview</h2>
+    <p> Here you can see all the keys associated with your account </p>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Key</th>
+            <th>Created on</th>
+            <th>Revoke</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for key in keys %}
+            <tr>
+                <td> {{ key.key }} </td>
+                <td> {{ key.created }} </td>
+                <td>
+                    <form method="post" action="{% url 'control:delete_apikey' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="key" value="{{ key.key }}">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Additional keys</h2>
+    <p> There is no limit on the amount of keys you can use </p>
+    <form method="post" action="{% url 'control:generate_apikey' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Generate</button>
+    </form>
+{% endblock %}
