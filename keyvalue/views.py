@@ -102,3 +102,4 @@ def register(request):
 def setup_new_user(user):
     create_api_key(user, None, is_key_root=True)
     create_api_key(user, None, is_key_generate=True)
+    create_api_key(user, None)

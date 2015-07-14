@@ -3,23 +3,26 @@ import config_local
 
 SECRET_KEY = config_local.SECRET_KEY
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': config_local.DB_ENGINE,
-#         'NAME': config_local.DB_NAME,
-#         'USER': config_local.DB_USER,
-#         'PASSWORD': config_local.DB_PASS,
-#         'HOST': config_local.DB_HOST,
-#         'TEST': {'CHARSET': "utf8", 'COLLATION': "utf8_general_ci"}
-#     }
-# }
-
-DATABASES = {
+DATABASES_web = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'simple_test_db'
+        'ENGINE': config_local.DB_ENGINE,
+        'NAME': config_local.DB_NAME,
+        'USER': config_local.DB_USER,
+        'PASSWORD': config_local.DB_PASS,
+        'HOST': config_local.DB_HOST,
+        'TEST': {'CHARSET': "utf8", 'COLLATION': "utf8_general_ci"}
     }
 }
+
+DATABASES_local = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'simple_test_db',
+        'TEST': {'CHARSET': "utf8", 'COLLATION': "utf8_general_ci"}
+    }
+}
+
+DATABASES = DATABASES_web
 
 DEBUG = True
 ALLOWED_HOSTS = []
