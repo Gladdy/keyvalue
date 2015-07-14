@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-2">
+            <div class="wrap" data-spy="affix" data-offset-top="94">
+
+                <div class="btn-group-vertical navbar">
+                    <button class="btn btn-primary disabled nocursor" style="cursor:default;"><b>API documentation</b></button>
+                    <a href="#basic" class="btn btn-default">Basic</a>
+                    <a href="#advanced" class="btn btn-default">Advanced</a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="row row-main">
+                <h2 id="basic">Basic - no API key necessary</h2>
+                <p>Submitting a value</p>
+            <pre><code class="language-xml" data-lang="xml">POST /api/
+Content-Type: text/json
+{
+    "data" : "Hello world!",
+    "expiry" : "2019-12-31"
+}
+
+HTTP 200 OK
+/api/value_key
+</code></pre>
+                <p>Fetching a value</p>
+            <pre><code class="language-xml" data-lang="xml">GET /api/value_key
+
+HTTP 200 OK
+Content-Type: text/json
+{
+    "data" : "Hello world!",
+    "expiry" : "2019-12-31"
+}</code></pre>
+
+            </div>
+            <div class="row row-main">
+                <h2 id="advanced">Advanced</h2>
+                <p>
+                    Lorem ipsum dolor slestie urna eu euismod. Nam eget dolor consequat, malesuada urna et, accumsan est. Praesent vitae lorem ex. Aliquam non nisi ac dui euismod porta a quis enim. Vivamus aliquet, nulla non semper gravida, lectus ligula molestie lacus, ut egestas ex orci et orci. In id massa nec massa dapibus maximus quis nec sapien. Donec in nunc tincidunt, dictum leo nec, dignissim justo. Mauris a varius nisi. Nam congue lectus sed volutpat tristique. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam sit amet metus ac enim lacinia sodales sit amet at massa. Ut nec tortor quis massa viverra mollis sit amet at dui. Suspendisse maximus ligula vel efficitur posuere.
+                </p>
+                <p>
+                    Integer placerat molestie urna eu euismod. Nam eget dolor consequat, malesuada urna et, accumsan est. Praesent vitae lorem ex. Aliquam non nisi ac dui euismod porta a quis enim. Vivamus aliquet, nulla non semper gravida, lectus ligula molestie lacus, ut egestas ex orci et orci. In id massa nec massa dapibus maximus quis nec sapien. Donec in nunc tincidunt, dictum leo nec, dignissim justo. Mauris a varius nisi. Nam congue lectus sed volutpat tristique. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam sit amet metus ac enim lacinia sodales sit amet at massa. Ut nec tortor quis massa viverra mollis sit amet at dui. Suspendisse maximus ligula vel efficitur posuere.
+                </p>
+                <p>
+                    Integer placerat molestie urna eu euismod. Nam eget dolor consequat, malesuada urna et, accumsan est. Praesent vitae lorem ex. Aliquam non nisi ac dui euismod porta a quis enim. Vivamus aliquet, nulla non semper gravida, lectus ligula molestie lacus, ut egestas ex orci et orci. In id massa nec massa dapibus maximus quis nec sapien. Donec in nunc tincidunt, dictum leo nec, dignissim justo. Mauris a varius nisi. Nam congue lectus sed volutpat tristique. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam sit amet metus ac enim lacinia sodales sit amet at massa. Ut nec tortor quis massa viverra mollis sit amet at dui. Suspendisse maximus ligula vel efficitur posuere.
+                </p>
+                <p>
+                    Integer placerat molestie urna eu euismod. Nam eget dolor consequat, malesuada urna et, accumsan est. Praesent vitae lorem ex. Aliquam non nisi ac dui euismod porta a quis enim. Vivamus aliquet, nulla non semper gravida, lectus ligula molestie lacus, ut egestas ex orci et orci. In id massa nec massa dapibus maximus quis nec sapien. Donec in nunc tincidunt, dictum leo nec, dignissim justo. Mauris a varius nisi. Nam congue lectus sed volutpat tristique. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam sit amet metus ac enim lacinia sodales sit amet at massa. Ut nec tortor quis massa viverra mollis sit amet at dui. Suspendisse maximus ligula vel efficitur posuere.
+                </p>
+                <p>
+                    Integer placerat molestie urna eu euismod. Nam eget dolor consequat, malesuada urna et, accumsan est. Praesent vitae lorem ex. Aliquam non nisi ac dui euismod porta a quis enim. Vivamus aliquet, nulla non semper gravida, lectus ligula molestie lacus, ut egestas ex orci et orci. In id massa nec massa dapibus maximus quis nec sapien. Donec in nunc tincidunt, dictum leo nec, dignissim justo. Mauris a varius nisi. Nam congue lectus sed volutpat tristique. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam sit amet metus ac enim lacinia sodales sit amet at massa. Ut nec tortor quis massa viverra mollis sit amet at dui. Suspendisse maximus ligula vel efficitur posuere.
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

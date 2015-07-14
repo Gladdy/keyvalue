@@ -3,13 +3,21 @@ import config_local
 
 SECRET_KEY = config_local.SECRET_KEY
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': config_local.DB_ENGINE,
+#         'NAME': config_local.DB_NAME,
+#         'USER': config_local.DB_USER,
+#         'PASSWORD': config_local.DB_PASS,
+#         'HOST': config_local.DB_HOST,
+#         'TEST': {'CHARSET': "utf8", 'COLLATION': "utf8_general_ci"}
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': config_local.DB_ENGINE,
-        'NAME': config_local.DB_NAME,
-        'USER': config_local.DB_USER,
-        'PASSWORD': config_local.DB_PASS,
-        'HOST': config_local.DB_HOST
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'simple_test_db'
     }
 }
 
@@ -23,6 +31,7 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 #STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 LOGIN_URL = '/login'
+NO_API_USERNAME = 'no_api_key'
 
 # Application definition
 INSTALLED_APPS = (
@@ -37,6 +46,12 @@ INSTALLED_APPS = (
     'control',
     'rest_framework',
 )
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    )
+}
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

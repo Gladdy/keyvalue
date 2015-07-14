@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class ApiKey(models.Model):
     key = models.CharField(max_length=16, primary_key=True)
     user = models.ForeignKey(User)
@@ -18,14 +19,15 @@ class ApiKey(models.Model):
 
 
 class Entry(models.Model):
-    key = models.CharField(max_length=16)
+    key = models.CharField(max_length=16, primary_key=True)
     value = models.TextField()
-    user = models.ForeignKey(ApiKey, default=1)
+    api_key = models.ForeignKey(ApiKey, default=1)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    is_public = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = (('key', 'user'),)
+        unique_together = (('key', 'api_key'),)
 
     def __str__(self):
         return self.key

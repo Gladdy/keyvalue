@@ -6,4 +6,5 @@ class EntrySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Entry
-        fields = ('key', 'user', 'value', 'created', 'updated')
+        fields = ('key', 'value', 'is_public', 'updated')
+        # fields = ('value', 'is_public', 'created', 'updated')

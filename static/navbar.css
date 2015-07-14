@@ -34,3 +34,9 @@ h2 {
     font-family: Courier;
     font-size:12pt;
 }
+@media (min-width: 768px) {
+    .affix-fixed {
+        position: fixed;
+        width: 163px;
+    }
+}

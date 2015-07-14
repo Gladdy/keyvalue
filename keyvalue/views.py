@@ -8,6 +8,7 @@ from api.models import ApiKey
 
 from keyvalue.utility import create_api_key
 
+
 def index(request):
     if request.user.is_authenticated():
         return render(request, 'keyvalue/index-login.html')
@@ -39,13 +40,13 @@ def login(request):
             identifier = request.POST['id']
             password = request.POST['password']
         else:
-            return render(request, "keyvalue/login.html", {'error': "Please fill in all fields"})
+            return render(request, "keyvalue/login.html", {'error': "Please fill in all fields"}, status=401)
 
         # Search for the username and email address to determine the user to log in
-        candidates = User.objects.filter(Q(username=identifier)|Q(email=identifier))
+        candidates = User.objects.filter(Q(username=identifier) | Q(email=identifier))
 
         if candidates.count() == 0:
-            return render(request, "keyvalue/login.html", {'error': "Unable to find username or email address"})
+            return render(request, "keyvalue/login.html", {'error': "Unable to find username or email address"}, status=401)
 
         candidate = candidates[0]
 
@@ -57,9 +58,9 @@ def login(request):
             django_login(request, user)
 
             # Extract the page that has been supplied for redirection
-            return HttpResponseRedirect(request.POST.get('nextpage',''))
+            return HttpResponseRedirect(request.POST.get('nextpage', ''))
         else:
-            return render(request, "keyvalue/login.html", {'error': "Invalid password"})
+            return render(request, "keyvalue/login.html", {'error': "Invalid password"}, status=401)
 
 
 def register(request):
@@ -96,6 +97,7 @@ def register(request):
             return render(request, "keyvalue/register.html", {'error': "This username was already taken or invalid"})
         except Exception:
             return render(request, "keyvalue/register.html", {'error': "An error occurred: invalid data?"})
+
 
 def setup_new_user(user):
     create_api_key(user, None, is_key_root=True)
