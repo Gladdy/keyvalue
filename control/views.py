@@ -2,7 +2,6 @@ from django.shortcuts import render
 from api.models import Entry, ApiKey
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
-from django.db.models import Q
 
 from keyvalue.utility import create_api_key
 
@@ -55,7 +54,7 @@ def generate_apikey(request):
 def delete_apikey(request):
     if request.method == 'POST':
         try:
-            key = ApiKey.objects.get(key=request.POST['key'], user=request.user)
+            key = request.user.apikey_set.get(key=request.POST['key'])
             key.delete()
         except ApiKey.DoesNotExist:
             pass

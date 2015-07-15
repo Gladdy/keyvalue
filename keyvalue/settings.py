@@ -26,7 +26,7 @@ DATABASES = DATABASES_web
 
 DEBUG = True
 ALLOWED_HOSTS = []
-APPEND_SLASH = True
+APPEND_SLASH = False
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 STATIC_URL = '/static/'

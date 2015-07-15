@@ -5,11 +5,17 @@ from django.contrib.auth.models import User
 from keyvalue.utility import random_string
 from distutils.util import strtobool
 from django.core.urlresolvers import reverse
-
+from api.serializers import EntrySerializer
 
 def create_entry(value, api_key, **kwargs):
-
-    # Finally, create the entry
+    """
+    Repeatedly attempt to create an entry for the value using the given api_key.
+    This function is guaranteed to succeed unless the primary keys have been exhausted (~5E28)
+    :param value:
+    :param api_key:
+    :param kwargs:
+    :return: a successful entry into the database
+    """
     success = False
     while not success:
         try:
@@ -23,17 +29,25 @@ def create_entry(value, api_key, **kwargs):
 
 
 def resp(request, code, **kwargs):
-
-    elements = {}
+    """
+    Create a response for the request.
+    :param request:
+    :param code: The status code of the response
+    :param kwargs: Possibilities:
+                    - response, for traffic from the app to the client
+                    - error, reporting the errors
+    :return: A djangorestframework Response object
+    """
 
     if 'entry' in kwargs:
-        entry = kwargs['entry']
-        url = reverse('api:root') + entry.key + '/'
-        entry_dict = {'key': entry.key, 'url': url, 'value': entry.value}
-        elements.update(entry_dict)
+        if 'many' in kwargs:
+            response = EntrySerializer(kwargs['entry'], many=kwargs['many'])
+        else:
+            response = EntrySerializer(kwargs['entry'])
 
-    if 'response' in kwargs:
-        elements.update(kwargs['response'])
+        return Response(response.data, code, content_type='application/json')
+
+    elements = {}
 
     if 'error' in kwargs:
         elements.update({'error': kwargs['error']})
@@ -54,7 +68,7 @@ def check_is_public(request, default=False):
     return is_public
 
 
-def check_api_key(request, entry, override_valid=False, check_root=True, check_match=True):
+def check_api_key(request, entry, check_root=True, check_match=True):
 
     if 'api_key' in request.GET:
         try:
@@ -62,8 +76,8 @@ def check_api_key(request, entry, override_valid=False, check_root=True, check_m
         except ApiKey.DoesNotExist:
             raise ValueError('Invalid API key')
 
-        # If only creating an element, having an API key is sufficient
-        if override_valid:
+        # If only creating an element, having a valid API key is sufficient
+        if entry is None:
             return api_key
 
         # Check all
@@ -73,8 +87,6 @@ def check_api_key(request, entry, override_valid=False, check_root=True, check_m
                 access = True
 
         if check_root and entry is not None:
-            print(entry.api_key.user)
-            print(api_key.user)
             if entry.api_key.user == api_key.user and api_key.is_key_root:
                 access = True
 
@@ -86,16 +98,23 @@ def check_api_key(request, entry, override_valid=False, check_root=True, check_m
     else:
         raise ValueError('You should have supplied an API key')
 
+def check_has_time(request, api_key, default=None):
 
-def check_has_value(request):
-    if 'value' in request.data:
-        return
+    if 'timeout' in request.data:
+
+
+
+        return request.data['value']
+    elif default is not None:
+        return default
     else:
         raise ValueError('Please supply a value in the request')
 
 
-def get_entry(request, pk):
-    try:
-        return Entry.objects.get(pk=pk)
-    except Entry.DoesNotExist:
-        return resp(request, status.HTTP_200_OK, error='Key does not exist')
+def check_has_value(request, api_key, default=None):
+    if 'value' in request.data:
+        return request.data['value']
+    elif default is not None:
+        return default
+    else:
+        raise ValueError('Please supply a value in the request')

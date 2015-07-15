@@ -11,7 +11,8 @@ from keyvalue.utility import create_api_key
 
 def index(request):
     if request.user.is_authenticated():
-        return render(request, 'keyvalue/index-login.html')
+        #return render(request, 'keyvalue/index-login.html')
+        return render(request, 'keyvalue/index.html')
     else:
         return render(request, 'keyvalue/index.html')
 
@@ -22,6 +23,9 @@ def features(request):
 
 def about(request):
     return render(request, 'keyvalue/about.html')
+
+def documentation(request):
+    return render(request, 'keyvalue/documentation.html')
 
 
 def login(request):
@@ -46,7 +50,7 @@ def login(request):
         candidates = User.objects.filter(Q(username=identifier) | Q(email=identifier))
 
         if candidates.count() == 0:
-            return render(request, "keyvalue/login.html", {'error': "Unable to find username or email address"}, status=401)
+            return render(request, "keyvalue/login.html", {'error': "Unknown username or email address"}, status=401)
 
         candidate = candidates[0]
 
