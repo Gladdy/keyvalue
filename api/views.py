@@ -14,7 +14,7 @@ def entry_list(request):
         try:
             api_key = check_api_key(request, None)
 
-            entries = Entry.objects.filter(api_key=api_key)
+            entries = Entry.objects.filter(api_key=api_key).order_by('updated')
             return resp(request, status.HTTP_200_OK, entry=entries, many=True)
 
         except ValueError as e:
@@ -91,7 +91,7 @@ def entry_detail(request, pk):
                 entry.is_public = is_public
                 entry.save()
 
-                return resp(request, status.HTTP_200_OK, entry=entry)
+                return resp(request, status.HTTP_202_ACCEPTED, entry=entry)
 
             except ValueError as e:
                 return resp(request, status.HTTP_400_BAD_REQUEST, error=str(e))
@@ -104,8 +104,8 @@ def entry_detail(request, pk):
                 value = check_has_value(request, api_key)
                 is_public = check_is_public(request)
 
-                entry = Entry.objects.create(key=pk, value=value, api_key=api_key, is_public=is_public)
-                return resp(request, status.HTTP_200_OK, entry=entry)
+                entry = create_entry(value, api_key, key=pk, is_public=is_public)
+                return resp(request, status.HTTP_201_CREATED, entry=entry)
 
             except ValueError as e:
                 return resp(request, status.HTTP_400_BAD_REQUEST, error=str(e))

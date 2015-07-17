@@ -16,6 +16,15 @@ def create_entry(value, api_key, **kwargs):
     :param kwargs:
     :return: a successful entry into the database
     """
+
+    if 'key' in kwargs:
+        key = kwargs['key']
+
+        if len(key) > 16:
+            raise ValueError("Key is too long (max length: 16)")
+
+        return Entry.objects.create(value=value, api_key=api_key, **kwargs)
+
     success = False
     while not success:
         try:
