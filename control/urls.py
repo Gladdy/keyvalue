@@ -11,6 +11,10 @@ urlpatterns = [
     url(r'^bulk/?$', views.bulk, name='bulk'),
     url(r'^apikeys/?$', views.apikeys, name='apikeys'),
 
+    # Operations
+    url(r'^mapreduce/?', views.mapreduce, name='mapreduce'),
+    url(r'^conditionals/?', views.conditionals, name='conditionals'),
+
     # Settings
     url(r'^restrictions/?$', views.restrictions, name='restrictions'),
 

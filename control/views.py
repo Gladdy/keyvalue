@@ -24,6 +24,16 @@ def manual(request):
 def bulk(request):
     return render(request, 'control/management/bulk.html', {'active': 'bulk'})
 
+''' Operations '''
+@login_required
+def mapreduce(request):
+    return render(request, 'control/operations/mapreduce.html', {'active': 'mapreduce'})
+
+@login_required
+def conditionals(request):
+    return render(request, 'control/operations/conditionals.html', {'active': 'conditionals'})
+
+
 @login_required
 def apikeys(request):
     key_root = request.user.apikey_set.get(is_key_root=True)

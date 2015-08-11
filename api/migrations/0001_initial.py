@@ -13,18 +13,36 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+            name='ApiKey',
+            fields=[
+                ('id', models.AutoField(primary_key=True, serialize=False)),
+                ('key', models.CharField(db_index=True, unique=True, max_length=16)),
+                ('created_time', models.DateTimeField(auto_now_add=True)),
+                ('created_ip', models.CharField(default=None, null=True, max_length=45)),
+                ('is_key_root', models.NullBooleanField(default=None)),
+                ('is_key_generate', models.NullBooleanField(default=None)),
+                ('testval', models.CharField(max_length=10)),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+            ],
+        ),
+        migrations.CreateModel(
             name='Entry',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, primary_key=True, auto_created=True)),
-                ('key', models.CharField(max_length=10)),
-                ('value', models.TextField()),
+                ('id', models.AutoField(primary_key=True, serialize=False)),
+                ('key', models.CharField(db_index=True, unique=True, max_length=16)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
-                ('user', models.ForeignKey(default=None, to=settings.AUTH_USER_MODEL, blank=True, null=True)),
+                ('is_public', models.BooleanField(default=False)),
+                ('value', models.TextField()),
+                ('api_key', models.ForeignKey(to='api.ApiKey')),
             ],
         ),
         migrations.AlterUniqueTogether(
             name='entry',
-            unique_together=set([('key', 'user')]),
+            unique_together=set([('key', 'api_key')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='apikey',
+            unique_together=set([('user', 'is_key_root'), ('user', 'is_key_generate')]),
         ),
     ]

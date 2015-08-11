@@ -5,124 +5,67 @@ from rest_framework.decorators import api_view
 from api.utility import *
 from keyvalue.settings import NO_API_USERNAME
 
+from api.models import Entry
+from api.serializers import EntrySerializer
+from django.http import Http404
 
-@api_view(['GET', 'POST'])
-def entry_list(request):
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
-    if request.method == 'GET':
-        # GET  /api/?api_key=API_KEY
-        try:
-            api_key = check_api_key(request, None)
+class EntryList(APIView):
+    """
+    List all entries or create a new entry
+    """
 
-            entries = Entry.objects.filter(api_key=api_key).order_by('updated')
-            return resp(request, status.HTTP_200_OK, entry=entries, many=True)
+    def get(self, request, format=None):
+        entries = Entry.objects.all()
+        serializer = EntrySerializer(entries,many=True)
+        return Response(serializer.data)
 
-        except ValueError as e:
-            return resp(request, status.HTTP_400_BAD_REQUEST, error=str(e))
+    def post(self, request, format=None):
 
-    else:
+        data = request.data.copy()
+        data['entry_key'] = random_string(8)
+        data['is_public'] = True
 
-        # POST  /api/?api_key=API_KEY   value=VALUE is_public={true false}
-        if 'api_key' in request.GET:
-            try:
-                api_key = check_api_key(request, None)
-                value = check_has_value(request, api_key)
-                is_public = check_is_public(request)
+        serializer = EntrySerializer(data=data)
 
-                entry = create_entry(request.data['value'], api_key, is_public=is_public)
-                return resp(request, status.HTTP_201_CREATED, entry=entry)
+        if serializer.is_valid():
+            entry = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers={'Location':request.build_absolute_uri() + data['entry_key']+'/'})
 
-            except ValueError as e:
-                return resp(request, status.HTTP_400_BAD_REQUEST, error=str(e))
-
-        # POST  /api/               value=VALUE
-        # Anonymous submission
         else:
-            try:
-                api_key = User.objects.get(username=NO_API_USERNAME).apikey_set.get(is_key_generate=True)
-                value = check_has_value(request, api_key)
-                is_public = True
-
-                entry = create_entry(request.data['value'], api_key, is_public=is_public)
-                return resp(request, status.HTTP_201_CREATED, entry=entry)
-
-            except ValueError as e:
-                return resp(request, status.HTTP_400_BAD_REQUEST, error=str(e))
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'PUT', 'POST', 'DELETE'])
-def entry_detail(request, pk):
 
-    if request.method == 'GET':
 
+class EntryDetail(APIView):
+    """
+    Retrieve a single entry, update or delete it
+    """
+
+    def get_object(self, key):
         try:
-            entry = Entry.objects.get(pk=pk)
+            return Entry.objects.get(entry_key=key)
         except Entry.DoesNotExist:
-            return resp(request, status.HTTP_404_NOT_FOUND, error='Key does not exist')
+            raise Http404
 
-        # GET  /api/KEY                     entries with is_public == True
-        if entry.is_public:
-            return resp(request, status.HTTP_200_OK, entry=entry)
+    def get(self, request, pk, format=None):
+        entry = self.get_object(pk)
+        serializer = EntrySerializer(entry)
+        return Response(serializer.data)
 
-        # GET  /api/KEY?api_key=API_KEY     non public entries
-        else:
-            try:
-                check_api_key(request, entry)
-                return resp(request, status.HTTP_200_OK, entry=entry)
+    def put(self, request, pk, format=None):
+        entry = self.get_object(pk)
+        serializer = EntrySerializer(entry, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-            except ValueError as e:
-                return resp(request, status.HTTP_401_UNAUTHORIZED, error=str(e))
-
-    # POST and PUT have the same behaviour. Useful when the client only supports POST.
-    elif request.method == 'POST' or request.method == 'PUT':
-
-        # POST  /api/KEY?api_key=API_KEY value=VALUE
-        # PUT   /api/KEY?api_key=API_KEY value=VALUE
-        try:
-            entry = Entry.objects.get(pk=pk)
-
-            # Update the existing entry
-            try:
-                api_key = check_api_key(request, entry)
-                value = check_has_value(request, api_key, default=entry.value)
-                is_public = check_is_public(request, default=entry.is_public)
-
-                entry.value = value
-                entry.is_public = is_public
-                entry.save()
-
-                return resp(request, status.HTTP_202_ACCEPTED, entry=entry)
-
-            except ValueError as e:
-                return resp(request, status.HTTP_400_BAD_REQUEST, error=str(e))
-
-        except Entry.DoesNotExist:
-
-            # Create a new entry
-            try:
-                api_key = check_api_key(request, None)
-                value = check_has_value(request, api_key)
-                is_public = check_is_public(request)
-
-                entry = create_entry(value, api_key, key=pk, is_public=is_public)
-                return resp(request, status.HTTP_201_CREATED, entry=entry)
-
-            except ValueError as e:
-                return resp(request, status.HTTP_400_BAD_REQUEST, error=str(e))
-            except Exception as e:
-                return resp(request, status.HTTP_400_BAD_REQUEST, error=str(e))
-
-    elif request.method == 'DELETE':
-
-        try:
-            entry = Entry.objects.get(pk=pk)
-        except Entry.DoesNotExist:
-            return resp(request, status.HTTP_404_NOT_FOUND, error='Key does not exist')
-
-        # DELETE  /api/KEY?api_key=API_KEY
-        try:
-            check_api_key(request, entry)
-            entry.delete()
-            return resp(request, status.HTTP_410_GONE)
-        except ValueError as e:
-            return resp(request, status.HTTP_400_BAD_REQUEST, error=str(e))
+    def delete(self, request, pk, format=None):
+        entry = self.get_object(pk)
+        entry.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
