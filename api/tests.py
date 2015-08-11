@@ -30,6 +30,8 @@ class ApiTestCase(TestCase):
         self.original_value = "UTF-8 thrown in: C λ aSH"
         self.key = 'testkey'
         self.api_key = User.objects.get(username=self.username).apikey_set.get(is_key_root=None, is_key_generate=None)
+        self.root_key = User.objects.get(username=self.username).apikey_set.get(is_key_root=True)
+        self.generate_key = User.objects.get(username=self.username).apikey_set.get(is_key_generate=True)
 
     def login(self, ids):
         return self.client.post(reverse('login'), {'id': ids, 'password': self.password})
@@ -183,3 +185,41 @@ class ApiTestCase(TestCase):
 
         self.assertEqual(original_data['created'], updated_data['created'])
         self.assertNotEqual(original_data['updated'],updated_data['updated'])
+
+    """
+    DELETING VALUES
+    """
+    def test_post_delete(self):
+        data = self.perform_request(method='POST', key=self.key, api_key=self.api_key, extra={"value": self.original_value}, result=201)
+        self.assertEqual(data['value'], self.original_value)
+        self.assertEqual(data['key'], self.key)
+
+        data = self.perform_request(key=self.key, api_key=self.api_key, method='GET',result=200)
+        self.assertEqual(data['value'], self.original_value)
+        self.assertEqual(data['key'],self.key)
+
+        data = self.perform_request(key=self.key, api_key=self.api_key, method='DELETE', result=410)
+        data = self.perform_request(key=self.key, api_key=self.api_key, method='GET',result=404)
+
+    def test_post_delete_root_access(self):
+        data = self.perform_request(method='POST', key=self.key, api_key=self.api_key, extra={"value": self.original_value}, result=201)
+        self.assertEqual(data['value'], self.original_value)
+        self.assertEqual(data['key'], self.key)
+
+        data = self.perform_request(key=self.key, api_key=self.root_key, method='GET',result=200)
+        self.assertEqual(data['value'], self.original_value)
+        self.assertEqual(data['key'],self.key)
+
+        data = self.perform_request(key=self.key, api_key=self.root_key, method='DELETE', result=410)
+        data = self.perform_request(key=self.key, api_key=self.root_key, method='GET',result=404)
+
+    def test_post_delete_root_access(self):
+        data = self.perform_request(method='POST', key=self.key, api_key=self.api_key, extra={"value": self.original_value}, result=201)
+        self.assertEqual(data['value'], self.original_value)
+        self.assertEqual(data['key'], self.key)
+
+        data = self.perform_request(key=self.key, api_key=self.api_key, method='GET',result=200)
+        self.assertEqual(data['value'], self.original_value)
+        self.assertEqual(data['key'],self.key)
+
+        data = self.perform_request(key=self.key, api_key=self.generate_key, method='DELETE', result=400)
