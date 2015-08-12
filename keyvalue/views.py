@@ -4,9 +4,9 @@ from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-from api.models import ApiKey
+from api.models import Token
 
-from keyvalue.utility import create_api_key
+from keyvalue.utility import create_token
 
 
 def index(request):
@@ -104,6 +104,6 @@ def register(request):
 
 
 def setup_new_user(user):
-    create_api_key(user, None, is_key_root=True)
-    create_api_key(user, None, is_key_generate=True)
-    create_api_key(user, None)
+    create_token(user, None, is_key_root=True)
+    create_token(user, None, is_key_generate=True)
+    create_token(user, None)

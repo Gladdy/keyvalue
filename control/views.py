@@ -1,9 +1,9 @@
 from django.shortcuts import render
-from api.models import Entry, ApiKey
+from api.models import Entry, Token
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 
-from keyvalue.utility import create_api_key
+from keyvalue.utility import create_token
 
 @login_required
 def index(request):
@@ -56,7 +56,7 @@ def restrictions(request):
 @login_required
 def generate_apikey(request):
     if request.method == 'POST':
-        create_api_key(request.user, request)
+        create_token(request.user, request)
 
     return redirect('control:apikeys')
 
@@ -66,7 +66,7 @@ def delete_apikey(request):
         try:
             key = request.user.apikey_set.get(key=request.POST['key'])
             key.delete()
-        except ApiKey.DoesNotExist:
+        except Token.DoesNotExist:
             pass
 
     return redirect('control:apikeys')

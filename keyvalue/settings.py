@@ -1,4 +1,5 @@
 import os
+
 import config_local
 
 SECRET_KEY = config_local.SECRET_KEY
@@ -34,7 +35,8 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 #STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 LOGIN_URL = '/login'
-NO_API_USERNAME = 'no_api_key'
+PUBLIC_DOMAIN_USERNAME = 'public_domain'
+
 
 # Application definition
 INSTALLED_APPS = (
@@ -52,6 +54,13 @@ INSTALLED_APPS = (
 
 REST_FRAMEWORK = {
 
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ),
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     'rest_framework.authentication.BasicAuthentication',
+    #     'rest_framework.authentication.SessionAuthentication',
+    # ),
 }
 
 MIDDLEWARE_CLASSES = (
@@ -84,9 +93,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'keyvalue.wsgi.application'
-
-
-
 
 
 

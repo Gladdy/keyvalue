@@ -13,36 +13,35 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='ApiKey',
-            fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('key', models.CharField(db_index=True, unique=True, max_length=16)),
-                ('created_time', models.DateTimeField(auto_now_add=True)),
-                ('created_ip', models.CharField(default=None, null=True, max_length=45)),
-                ('is_key_root', models.NullBooleanField(default=None)),
-                ('is_key_generate', models.NullBooleanField(default=None)),
-                ('testval', models.CharField(max_length=10)),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
-            ],
-        ),
-        migrations.CreateModel(
             name='Entry',
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('key', models.CharField(db_index=True, unique=True, max_length=16)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
                 ('is_public', models.BooleanField(default=False)),
+                ('key', models.CharField(unique=True, max_length=16, db_index=True)),
                 ('value', models.TextField()),
-                ('api_key', models.ForeignKey(to='api.ApiKey')),
             ],
         ),
-        migrations.AlterUniqueTogether(
-            name='entry',
-            unique_together=set([('key', 'api_key')]),
+        migrations.CreateModel(
+            name='Token',
+            fields=[
+                ('id', models.AutoField(primary_key=True, serialize=False)),
+                ('created_time', models.DateTimeField(auto_now_add=True)),
+                ('created_ip', models.CharField(null=True, max_length=45, default=None)),
+                ('is_key_root', models.NullBooleanField(default=None)),
+                ('is_key_generate', models.NullBooleanField(default=None)),
+                ('value', models.CharField(unique=True, max_length=16, db_index=True)),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+            ],
+        ),
+        migrations.AddField(
+            model_name='entry',
+            name='token',
+            field=models.ForeignKey(to='api.Token'),
         ),
         migrations.AlterUniqueTogether(
-            name='apikey',
-            unique_together=set([('user', 'is_key_root'), ('user', 'is_key_generate')]),
+            name='token',
+            unique_together=set([('user', 'is_key_generate'), ('user', 'is_key_root')]),
         ),
     ]

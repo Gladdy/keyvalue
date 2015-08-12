@@ -1,10 +1,10 @@
 import random
 import string
-from api.models import ApiKey, Entry
+from api.models import Token, Entry
 from ipware.ip import get_ip
 
 
-def create_api_key(user, request, **kwargs):
+def create_token(user, request, **kwargs):
 
     success = False
 
@@ -15,7 +15,7 @@ def create_api_key(user, request, **kwargs):
 
     while not success:
         try:
-            key = ApiKey.objects.create(key=random_string(16), created_ip=ip, user=user, **kwargs)
+            key = Token.objects.create(value=random_string(16), created_ip=ip, user=user, **kwargs)
             success = True
         except Exception:
             pass

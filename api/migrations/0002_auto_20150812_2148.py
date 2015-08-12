@@ -7,17 +7,13 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0009_auto_20150712_1405'),
+        ('api', '0001_initial'),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='entry',
-            name='id',
-        ),
         migrations.AlterField(
             model_name='entry',
             name='key',
-            field=models.CharField(primary_key=True, max_length=16, serialize=False),
+            field=models.CharField(db_index=True, max_length=16),
         ),
     ]
